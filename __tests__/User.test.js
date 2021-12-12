@@ -105,4 +105,25 @@ describe("User's authenticate tests", () => {
 
         expect((await userCase.authenticate(user)).status).toBe("done");
     });
+
+    it("Should return status 'not done' when the user email is not correct", async () => {
+        let user = undefined;
+
+        let userCase = new UserUseCases();
+
+        expect((await userCase.authenticate(user)).status).toBe("not done");
+    });
+
+    it("Should return status 'not done' when the user's password is not correct", async () => {
+        let newUser = {
+            name: undefined,
+            email: "email@gmail.com",
+            password: undefined,
+        };
+        let user = new User(newUser);
+
+        let userCase = new UserUseCases();
+
+        expect((await userCase.authenticate(user)).status).toBe("not done");
+    });
 });
