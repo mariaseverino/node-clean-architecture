@@ -6,10 +6,16 @@ class User {
     }
 }
 
-describe("User tests", () => {
-    it("Should get the user's name ", async () => {
-        let user = new User("maria", "email@gmail.com", "123456");
+class UserRepository extends User {
+    findByName() {
+        return this.name;
+    }
+}
 
-        expect(user.name).toBe("maria");
+describe("User's tests", () => {
+    it("Should get the user's name ", async () => {
+        let user = new UserRepository("maria", "email@gmail.com", "123456");
+
+        expect(user.findByName()).toBe("maria");
     });
 });
