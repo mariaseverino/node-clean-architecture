@@ -6,16 +6,35 @@ class User {
     }
 }
 
-class UserRepository extends User {
-    findByName() {
-        return this.name;
+class UserSQLiteRepository {
+    addUser({ name, email, password }) {
+        return "done";
     }
 }
 
-describe("User's tests", () => {
-    it("Should get the user's name ", async () => {
-        let user = new UserRepository("maria", "email@gmail.com", "123456");
+class UserMongoBDRepository {
+    addUser({ name, email, password }) {
+        return "done";
+    }
+}
 
-        expect(user.findByName()).toBe("maria");
+class UserRepository extends UserSQLiteRepository {}
+
+class UserUseCases {
+    async create(user) {
+        let userRepository = new UserRepository();
+
+        const status = await userRepository.addUser(user);
+
+        return { status };
+    }
+}
+describe("User's tests", () => {
+    it("Should create a new user ", async () => {
+        let user = new User("maria", "email@gmail.com", "123456");
+
+        let userCase = new UserUseCases();
+
+        expect((await userCase.create(user)).status).toBe("done");
     });
 });
