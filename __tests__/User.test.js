@@ -1,68 +1,5 @@
-class User {
-    constructor({ name, email, password }) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-    }
-}
-
-class UserSQLiteRepository {
-    addUser({ name, email, password }) {
-        return "done";
-    }
-
-    findUser(user) {
-        if (user === undefined) return undefined;
-
-        if (user.password === undefined) {
-            return { password: "wrongPassword" };
-        }
-        return user;
-    }
-
-    findByEmail({ email }) {
-        return email === false ? true : false;
-    }
-}
-
-class UserMongoBDRepository {
-    addUser({ name, email, password }) {
-        return "done";
-    }
-}
-
-class UserRepository extends UserSQLiteRepository {}
-
-class UserUseCases {
-    async create(user) {
-        let userRepository = new UserRepository();
-
-        const userAlreadyExists = await userRepository.findByEmail(user);
-
-        if (userAlreadyExists) {
-            return { status: "not done" };
-        }
-        const status = await userRepository.addUser(user);
-
-        return { status };
-    }
-
-    async authenticate(user) {
-        let userRepository = new UserRepository();
-
-        const userExists = await userRepository.findUser(user);
-
-        if (!userExists) {
-            return { status: "not done" };
-        }
-
-        if (user.password != userExists.password) {
-            return { status: "not done" };
-        }
-
-        return { status: "done" };
-    }
-}
+const User = require("../src/Domain/Entities/User");
+const UserUseCases = require("../src/Application/UseCase/UserCreateUserCase");
 
 describe("User's create tests", () => {
     it("Should return status 'done' when create a new user ", async () => {
@@ -106,7 +43,7 @@ describe("User's authenticate tests", () => {
         expect((await userCase.authenticate(user)).status).toBe("done");
     });
 
-    it("Should return status 'not done' when the user email is not correct", async () => {
+    it("Should return status 'not done' when the user's email is not correct", async () => {
         let user = undefined;
 
         let userCase = new UserUseCases();
