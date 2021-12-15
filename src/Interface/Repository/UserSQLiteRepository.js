@@ -1,19 +1,18 @@
+const knex = require("../../Infrastructure/knex");
+
 class UserSQLiteRepository {
-    addUser({ name, email, password }) {
-        return "done";
+    async addUser({ name, email, password }) {
+        const [userCreated] = await knex("users").insert({
+            name,
+            email,
+            password,
+        });
+
+        return userCreated;
     }
 
-    findUser(user) {
-        if (user === undefined) return undefined;
-
-        if (user.password === undefined) {
-            return { password: "wrongPassword" };
-        }
-        return user;
-    }
-
-    findByEmail({ email }) {
-        return email === false ? true : false;
+    async findByEmail({ email }) {
+        return await knex("users").where({ email }).select().first();
     }
 }
 

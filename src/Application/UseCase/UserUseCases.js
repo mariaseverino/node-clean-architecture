@@ -7,26 +7,26 @@ class UserUseCases {
     async create(user) {
         const userAlreadyExist = await this.userRepository.findByEmail(user);
 
-        if (userAlreadyExist) {
-            return { status: "not done" };
+        if (!!userAlreadyExist) {
+            return { done: false };
         }
-        const status = await this.userRepository.addUser(user);
+        const done = !!(await this.userRepository.addUser(user));
 
-        return { status };
+        return { done };
     }
 
     async authenticate(user) {
-        const userExists = await this.userRepository.findUser(user);
+        const userExists = await this.userRepository.findByEmail(user);
 
         if (!userExists) {
-            return { status: "not done" };
+            return { done: false };
         }
 
         if (user.password != userExists.password) {
-            return { status: "not done" };
+            return { done: false };
         }
 
-        return { status: "done" };
+        return { done: true };
     }
 }
 
